@@ -184,6 +184,7 @@ def show_generator_output(sess, n_images, input_z, out_channel_dim, image_mode):
     :param out_channel_dim: The number of channels in the output image
     :param image_mode: The mode to use for images ("RGB" or "L")
     """
+    pyplot.close('all')
     cmap = None if image_mode == 'RGB' else 'gray'
     z_dim = input_z.get_shape().as_list()[-1]
     example_z = np.random.uniform(-1, 1, size=[n_images, z_dim])
@@ -226,7 +227,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
     steps = 0
     
     with tf.Session() as sess:
-        summary_writer = tf.summary.FileWriter('./logs/', sess.graph)
+        #summary_writer = tf.summary.FileWriter('./logs/', sess.graph)
         sess.run(tf.global_variables_initializer())
         for epoch_i in range(epoch_count):
             for batch_images in get_batches(batch_size):
