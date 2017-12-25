@@ -1,4 +1,4 @@
-from gan import helper
+import helper
 
 data_dir = './data'
 
@@ -29,12 +29,6 @@ import tensorflow as tf
 # Check TensorFlow Version
 assert LooseVersion(tf.__version__) >= LooseVersion('1.0'), 'Please use TensorFlow version 1.0 or newer.  You are using {}'.format(tf.__version__)
 print('TensorFlow Version: {}'.format(tf.__version__))
-
-# Check for a GPU
-if not tf.test.gpu_device_name():
-    warnings.warn('No GPU found. Please use a GPU to train your neural network.')
-else:
-    print('Default GPU Device: {}'.format(tf.test.gpu_device_name()))
 
 
 def model_inputs(image_width, image_height, image_channels, z_dim):
@@ -98,9 +92,7 @@ def generator(z, out_channel_dim, is_train=True):
     :param is_train: Boolean if generator is being used for training
     :return: The tensor output of the generator
     """
-    #python syntax from forum
     reuse = False if is_train==True else True
-    # TODO: Implement Function adapted from dcgans
     with tf.variable_scope('generator', reuse=reuse):
         # First fully connected layer
         alpha=0.2
@@ -141,7 +133,6 @@ def model_loss(input_real, input_z, out_channel_dim):
     :param out_channel_dim: The number of channels in the output image
     :return: A tuple of (discriminator loss, generator loss)
     """
-    # TODO: Implement Function adapted from dcgan
     alpha=0.2
     g_model = generator(input_z, out_channel_dim)
     d_model_real, d_logits_real = discriminator(input_real)
@@ -168,7 +159,6 @@ def model_opt(d_loss, g_loss, learning_rate, beta1):
     :param beta1: The exponential decay rate for the 1st moment in the optimizer
     :return: A tuple of (discriminator training operation, generator training operation)
     """
-    # TODO: Implement Function adapted from dcgan
     t_vars = tf.trainable_variables()
     d_vars = [var for var in t_vars if var.name.startswith('discriminator')]
     g_vars = [var for var in t_vars if var.name.startswith('generator')]
@@ -204,7 +194,7 @@ def show_generator_output(sess, n_images, input_z, out_channel_dim, image_mode):
 
     images_grid = helper.images_square_grid(samples, image_mode)
     pyplot.imshow(images_grid, cmap=cmap)
-    pyplot.show()
+    pyplot.show(block=False)
 
 
 
@@ -236,6 +226,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
     steps = 0
     
     with tf.Session() as sess:
+        summary_writer = tf.summary.FileWriter('./logs/', sess.graph)
         sess.run(tf.global_variables_initializer())
         for epoch_i in range(epoch_count):
             for batch_images in get_batches(batch_size):
@@ -253,6 +244,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
                     print("Epoch {}/{}...".format(epoch_i+1, epochs),
                           "Discriminator Loss: {:.4f}...".format(train_loss_d),
                           "Generator Loss: {:.4f}".format(train_loss_g))
+                    saver.save(sess, './generator.ckpt')
                 
             
             train_loss_d = sess.run(d_loss,{z_input:batch_z,real_images:batch_images})
@@ -277,9 +269,7 @@ z_dim = 100
 learning_rate = 0.0002
 beta1 = 0.4
 
-"""
-DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
-"""
+
 epochs = 2
 
 mnist_dataset = helper.Dataset('mnist', glob(os.path.join(data_dir, 'mnist/*.jpg')))
