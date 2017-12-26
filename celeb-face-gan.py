@@ -229,6 +229,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
     with tf.Session() as sess:
         #summary_writer = tf.summary.FileWriter('./logs/', sess.graph)
         sess.run(tf.global_variables_initializer())
+        #saver.restore(sess, './generator.ckpt')
         for epoch_i in range(epoch_count):
             for batch_images in get_batches(batch_size):
                 # TODO: Train Model
@@ -263,7 +264,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
         saver.save(sess, './generator.ckpt')
                                                                 
                         
-
+'''
 
 batch_size = 64
 z_dim = 100
@@ -279,14 +280,14 @@ with tf.Graph().as_default():
           mnist_dataset.shape, mnist_dataset.image_mode)
 
 
-
+'''
 
 batch_size = 64
 z_dim = 100
 learning_rate = 0.0001
 beta1 = 0.5
 
-epochs = 1
+epochs = 10
 
 celeba_dataset = helper.Dataset('celeba', glob(os.path.join(data_dir, 'img_align_celeba/*.jpg')))
 with tf.Graph().as_default():
