@@ -195,7 +195,7 @@ def show_generator_output(sess, n_images, input_z, out_channel_dim, image_mode):
 
     images_grid = helper.images_square_grid(samples, image_mode)
     pyplot.imshow(images_grid, cmap=cmap)
-    pyplot.show(block=False)
+    pyplot.show(block=True)
 
 
 
@@ -229,7 +229,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
     with tf.Session() as sess:
         #summary_writer = tf.summary.FileWriter('./logs/', sess.graph)
         sess.run(tf.global_variables_initializer())
-        #saver.restore(sess, './generator.ckpt')
+        saver.restore(sess, './generator.ckpt')
         for epoch_i in range(epoch_count):
             for batch_images in get_batches(batch_size):
                 # TODO: Train Model
