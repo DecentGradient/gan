@@ -40,7 +40,7 @@ def model_inputs(image_width, image_height, image_channels, z_dim):
     :param z_dim: The dimension of Z
     :return: Tuple of (tensor of real input images, tensor of z data, learning rate)
     """
-    # TODO: Implement Function
+   
     real_images = tf.placeholder(tf.float32,(None,image_width,image_height,image_channels),name='real_images')
     z_input = tf.placeholder(tf.float32,(None,z_dim), name="z_input")
     
@@ -51,12 +51,12 @@ def model_inputs(image_width, image_height, image_channels, z_dim):
 
 def discriminator(images, reuse=False):
     """
-    Create the discriminator network
+
     :param image: Tensor of input image(s)
     :param reuse: Boolean if the weights should be reused
     :return: Tuple of (tensor output of the discriminator, tensor logits of the discriminator)
     """
-    # TODO: Implement Function
+    #
     #adapted from dcgans
     with tf.variable_scope('discriminator', reuse=reuse):
     # Input layer is 28x28x3
@@ -232,7 +232,6 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
         saver.restore(sess, './generator.ckpt')
         for epoch_i in range(epoch_count):
             for batch_images in get_batches(batch_size):
-                # TODO: Train Model
                 steps +=1
                 #print(batch_images)
                 batch_z = np.random.uniform(-1, 1, size=(batch_size, z_dim))
